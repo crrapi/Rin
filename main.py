@@ -2,7 +2,7 @@ import discord
 from json import load
 from discord.ext import commands
 
-with open('config.json') as file:
+with open('config.json') as file: # Put your token in a file called config.json, if you want to self-host
     config = load(file)
 
 async def get_prefix(bot, message):

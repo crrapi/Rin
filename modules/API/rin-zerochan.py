@@ -1,4 +1,3 @@
-import time
 import aiohttp
 import json
 from random import choice

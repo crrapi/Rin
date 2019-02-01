@@ -11,12 +11,13 @@ class ZeroChan:
     @commands.group(name='zerochan', aliases=['zc'], pass_context=True, invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def zerochan(self, ctx, *, query: str):
-        '''Search images from ZeroChan'''
+        '''Search images from ZeroChan (random)'''
         async with ctx.typing(), aiohttp.ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/search/{query}') as response:
                 try:
-                    image = (await response.json())['data']
-                    await ctx.send(choice(image)['thumb'])
+                    data = (await response.json())['data']
+                    image = choice(data)['thumb']
+                    await ctx.send(image)
                 except:
                     await ctx.send('Image not found')
     
@@ -27,10 +28,37 @@ class ZeroChan:
         async with ctx.typing(), aiohttp.ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/image/{id}') as response:
                 try:    
-                    image = (await response.json())['data']
-                    await ctx.send(image['url'])
+                    data = (await response.json())['data']
+                    image = data['url']
+                    await ctx.send(image)
                 except:
                     await ctx.send('Image not found')
+    
+    @zerochan.command(name='information', aliases=['info', 'in'], pass_context=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    async def information(self, ctx, query: str):
+        '''Get info from tags'''
+        async with ctx.typing(), aiohttp.ClientSession() as session:
+            async with session.post(f'https://rin-zerochan.herokuapp.com/info/{query}') as response:
+                try:
+                    info = (await response.json())['data']
+                    await ctx.send(info)
+                except:
+                    await ctx.send('Info not found')
+    
+    @zerochan.command(name='meta', aliases=['m'], pass_context=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    async def meta(self, ctx, query: str, name: str):
+        '''Get tags from meta'''
+        async with ctx.typing(), aiohttp.ClientSession() as session:
+            async with session.post(f'https://rin-zerochan.herokuapp.com/meta/{query}') as response:
+                try:
+                    data = (await response.json())['data']
+                    data_name = data['name']
+                    name = data_name[name]
+                    await ctx.send(name)
+                except:
+                    await ctx.send('Meta not found')
 
 def setup(bot):
     bot.add_cog(ZeroChan(bot))

@@ -129,3 +129,6 @@ cogs/__pycache__/
 
 # png:
 *.png
+
+# json:
+*.json

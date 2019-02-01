@@ -1,4 +1,4 @@
-import discord
+from discord import Status, Game
 from json import load
 from discord.ext import commands
 
@@ -24,12 +24,12 @@ if __name__ == '__main__':
             print(f'Loading {extension}...')
             bot.load_extension(extension)
         except:
-            print(f'Failed to load extension {extension}')
+            print(f'Failed to load extension {extension}.')
 
 @bot.event
 async def on_ready():
     print(f'Hello World, I\'m {bot.user.name}')
-    await bot.change_presence(status=discord.Status.idle, activity=discord.Game('Being code by reformed#5680'))
+    await bot.change_presence(status=Status.idle, activity=Game('Being code by reformed#5680'))
 
 bot.load_extension('jishaku')
 bot.run(config['token'])

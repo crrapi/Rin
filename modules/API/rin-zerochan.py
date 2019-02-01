@@ -47,14 +47,13 @@ class ZeroChan:
     
     @zerochan.command(name='meta', aliases=['m'], pass_context=True)
     @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def meta(self, ctx, query: str, name: str):
-        '''Get tags from meta'''
+    async def meta(self, ctx, query: str):
+        '''Get name tags from meta'''
         async with ctx.typing(), aiohttp.ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/meta/{query}') as response:
                 try:
                     data = (await response.json())['data']
-                    data_name = data['name']
-                    name = data_name[name]
+                    name = data['name']
                     await ctx.send(name)
                 except:
                     await ctx.send('Meta not found')

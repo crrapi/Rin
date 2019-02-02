@@ -14,7 +14,7 @@ async def get_prefix(bot, message):
     
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-extensions = ['modules.API.rin-zerochan']
+extensions = ['modules.rin-zerochan']
 
 bot = commands.Bot(command_prefix=get_prefix)
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
             print(f'Loading {extension}...')
             bot.load_extension(extension)
         except:
-            print(f'Failed to load extension {extension}.')
+            print(f'Failed to load extension {extension}')
 
 @bot.event
 async def on_ready():

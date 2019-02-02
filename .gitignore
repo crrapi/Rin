@@ -115,8 +115,14 @@ application.yml
 # logs
 logs/
 
-# cogs: __pycache__
-cogs/__pycache__/
+# modules: __pycache__
+modules/__pycache__/
+
+# utils: __pycache__
+modules/utils/__pycache__/
+
+# api: __pycache__
+modules/API/__pycache__/
 
 # git:
 .git/
@@ -126,6 +132,9 @@ cogs/__pycache__/
 
 # vbs:
 *.vbs
+
+# sh:
+*.sh
 
 # png:
 *.png

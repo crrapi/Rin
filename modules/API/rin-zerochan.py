@@ -1,29 +1,31 @@
-from ..utils.paginator import Pages
 from aiohttp import ClientSession
 from random import choice, randint
 from discord import Embed, Colour
 from discord.ext import commands
+from ..utils.paginator import Pages
+
 
 class ZeroChan:
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def zerochan(self, ctx, *, query: str, pages = randint(0, 11)):
+    async def zerochan(self, ctx, *, query: str, pages=randint(1, 11)):
         '''Search images from ZeroChan (random)'''
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/search/{query}/{pages}') as response:
                 try:
                     data = (await response.json())['data']
-                    embed = Embed(color=Colour.red())
                     random_image = choice(data)['thumb']
+                    embed = Embed(color=Colour.red())
                     embed.set_image(url=random_image)
+                    await ctx.message.add_reaction('\U00002705')
                     await ctx.send(embed=embed)
-                except Exception as e:
-                    await ctx.send(e)
-                
-    @zerochan.command(aliases=['i'], pass_context=True)
+                except:
+                    await ctx.send('Image not found.')
+
+    @zerochan.command(aliases=['i'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def image(self, ctx, id: str):
         '''Search images by ID'''
@@ -32,11 +34,14 @@ class ZeroChan:
                 try:
                     data = (await response.json())['data']
                     image = data['url']
-                    await ctx.send(image)
+                    embed = Embed(color=Colour.red())
+                    embed.set_image(url=image)
+                    await ctx.message.add_reaction('\U00002705')
+                    await ctx.send(embed=embed)
                 except:
-                    await ctx.send('Image not found')
-    
-    @zerochan.command(aliases=['info', 'in'], pass_context=True)
+                    await ctx.send('Image not found;')
+
+    @zerochan.command(aliases=['info', 'in'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def information(self, ctx, *, query: str):
         '''Get info from tags'''
@@ -44,19 +49,29 @@ class ZeroChan:
             async with session.post(f'https://rin-zerochan.herokuapp.com/info/{query}') as response:
                 try:
                     info = (await response.json())['data']
-                    await ctx.send(info)
+                    info = info[:1980] + '...' if len(info) >= 2000 else info
+                    if info:
+                        await ctx.send('```fix\n'+info+'\n```')
+                        await ctx.send(f'See more at: ```fix\nhttps://zerochan.net/{query}\n```')
                 except:
-                    await ctx.send('Info not found')
-    
-    @zerochan.command(aliases=['m'], pass_context=True)
+                    await ctx.send('Info not found.')
+
+    @zerochan.command(aliases=['m'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def meta(self, ctx, *, query: str):
         '''Get tags' names from meta'''
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/meta/{query}') as response:
-                data = (await response.json())['data']
-                p = Pages(ctx, entries=tuple(i['name'] for i in data))
-                await p.paginate()
+                try:
+                    data = (await response.json())['data']
+                    if data:
+                        pages = Pages(ctx, lines=tuple(
+                            i['name'] for i in data))
+                        await ctx.message.add_reaction('\U00002705')
+                        await pages.paginate()
+                except:
+                    await ctx.send('Meta not found.')
+
 
 def setup(bot):
     bot.add_cog(ZeroChan(bot))

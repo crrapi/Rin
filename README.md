@@ -1,4 +1,5 @@
 # Rin
+
 A bot focused on API integrations and Discord utilities.
 
 **I don't recommend cloning this repository for self-hosting, if you want to use it:**

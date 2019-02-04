@@ -2,19 +2,22 @@ from discord import Status, Game
 from json import load
 from discord.ext import commands
 
-with open('config.json') as file: # Put your token in a file called config.json, if you want to self-host
+# Put your token in a file called config.json, if you want to self-host
+with open('config.json') as file:
     config = load(file)
 
+
 async def get_prefix(bot, message):
-    
-    prefixes = ['u?', 'u!']
+
+    prefixes = ['u?', 'u.']
 
     if not message.guild:
         return '?'
-    
+
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-extensions = ['modules.rin-zerochan']
+extensions = ['modules.utils.errors',
+              'modules.API.rin-zerochan', 'modules.API.rin-danbooru']
 
 bot = commands.Bot(command_prefix=get_prefix)
 
@@ -23,8 +26,10 @@ if __name__ == '__main__':
         try:
             print(f'Loading {extension}...')
             bot.load_extension(extension)
+            print(f'Loaded {extension}!')
         except:
             print(f'Failed to load extension {extension}')
+
 
 @bot.event
 async def on_ready():

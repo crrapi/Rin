@@ -17,7 +17,7 @@ async def get_prefix(bot, message):
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 extensions = ['modules.utils.errors',
-              'modules.API.rin-zerochan', 'modules.API.rin-danbooru']
+              'modules.API.rin_zerochan', 'modules.API.rin_danbooru']
 
 bot = commands.Bot(command_prefix=get_prefix)
 

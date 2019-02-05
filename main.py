@@ -9,7 +9,8 @@ with open('config.json') as file:
 
 async def get_prefix(bot, message):
 
-    prefixes = ['u?', 'u.']
+    prefixes = ['rin ', 'Rin ', 'RIn ', 'RIN '
+                'riN ', 'rIn ', 'rIN ', 'RIn ']
 
     if not message.guild:
         return '?'

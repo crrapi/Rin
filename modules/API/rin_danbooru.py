@@ -18,40 +18,34 @@ class Danbooru:
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def danbooru(self, ctx, *, query: str):
         """Connects with the Danbooru client and retrieve a random image
-           from a post list (only SFW channels)."""
+        from a post list (only SFW channels)."""
         try:
             if 'rating:explicit' or 'rating:questionable' in query:
                 raise custom_exceptions.NSFWException('Good try, pervy!')
             client = DB('danbooru')
             post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=1)
-            random_image = choice(post)
-            image_url = random_image['file_url']
-            if image_url is None:
-                image_url = random_image['source']
-            else:
+            image_url = choice(post)['file_url']
+            if not image_url:
                 raise custom_exceptions.ImageNotFound('Image not found')
             embed = Embed(color=Colour.red())
             embed.set_image(url=image_url)
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
-        except (custom_exceptions.NSFWException, custom_exceptions.ImageNotFound) as e:
+        except (custom_exceptions.NSFWException, custom_exceptions.ImageNotFound, Exception) as e:
             await ctx.send(e)
 
     @danbooru.command(aliases=['n'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def nsfw(selfs, ctx, *, query: str):
         """Connects with Danbooru client and retrieve a random image
-           from a post list (only NSFW channels)."""
+        from a post list (only NSFW channels)."""
         try:
             if not ctx.channel.nsfw:
                 raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels!')
             client = DB('danbooru')
             post = client.post_list(tags=query, page=randint(1, 1000), limit=1)
-            random_image = choice(post)
-            image_url = random_image['file_url']
+            image_url = choice(post)['thumb']
             if not image_url:
-                image_url = random_image['source']
-            else:
                 raise custom_exceptions.ImageNotFound('Image not found.')
             embed = Embed(color=Colour.red())
             embed.set_image(url=image_url)

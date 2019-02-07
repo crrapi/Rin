@@ -46,7 +46,7 @@ class Danbooru:
                 raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels!')
             client = DB('danbooru')
             post = client.post_list(tags=query, page=randint(1, 1000), limit=1)
-            image_url = choice(post)['thumb']
+            image_url = choice(post)['file_url']
             if not image_url:
                 raise custom_exceptions.ImageNotFound('Image not found.')
             embed = Embed(color=Colour.red())

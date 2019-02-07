@@ -20,9 +20,11 @@ class Danbooru:
         """Connects with the Danbooru client and retrieve a random image
         from a post list (only SFW channels)."""
         try:
-            if 'rating:explicit' or 'rating:questionable' in query:
-                raise custom_exceptions.NSFWException('Good try, pervy!')
             client = DB('danbooru')
+            if 'rating:explicit' in query:
+                raise custom_exceptions.NSFWException('Good try, pervy!')
+            elif 'rating:questionable' in query:
+                raise custom_exceptions.NSFWException('Good try, pervy!')
             post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=1)
             image_url = choice(post)['file_url']
             if not image_url:

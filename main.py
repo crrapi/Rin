@@ -1,5 +1,6 @@
-from discord import Status, Game
 from json import load
+
+from discord import Status, Game
 from discord.ext import commands
 
 # Put your token in a file called config.json, if you want to self-host
@@ -8,9 +9,9 @@ with open('config.json') as file:
 
 
 async def get_prefix(bot, message):
-
     prefixes = ['rin ', 'Rin ', 'RIn ', 'RIN '
-                'riN ', 'rIn ', 'rIN ', 'RIn ']
+                'riN ', 'rIn ', 'rIN ', 'RIn ',
+                'r.', 'r?', 'r!']
 
     if not message.guild:
         return '?'
@@ -18,7 +19,9 @@ async def get_prefix(bot, message):
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 extensions = ['modules.utils.errors',
-              'modules.API.rin_zerochan', 'modules.API.rin_danbooru']
+              'modules.API.rin_zerochan',
+              'modules.API.rin_danbooru',
+              'modules.utils.essentials']
 
 bot = commands.Bot(command_prefix=get_prefix)
 
@@ -39,3 +42,4 @@ async def on_ready():
 
 bot.load_extension('jishaku')
 bot.run(config['token'])
+

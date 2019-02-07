@@ -1,7 +1,8 @@
+import asyncio
+import inspect
 import itertools
 import re
-import inspect
-import asyncio
+
 import discord
 
 
@@ -316,7 +317,6 @@ class HelpPaginator(Pages):
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
 
         # no longer need the database
-        await ctx.release()
 
         return self
 
@@ -338,7 +338,7 @@ class HelpPaginator(Pages):
             self.description = command.help or 'No help given.'
 
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
-        await ctx.release()
+
         return self
 
     @classmethod
@@ -372,7 +372,6 @@ class HelpPaginator(Pages):
         # this forces the pagination session
         self = cls(ctx, nested_pages, per_page=1)
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
-        await ctx.release()
 
         # swap the get_page implementation with one that supports our style of pagination
         self.get_page = self.get_bot_page
@@ -394,7 +393,7 @@ class HelpPaginator(Pages):
         self.embed.title = self.title
 
         if hasattr(self, '_is_bot'):
-            value = 'For more help, join the official bot support server: https://discord.gg/DWEaqMy'
+            value = 'Support server: https://discord.gg/HaCgM7y'
             self.embed.add_field(name='Support', value=value, inline=False)
 
         self.embed.set_footer(

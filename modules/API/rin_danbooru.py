@@ -22,7 +22,7 @@ class Danbooru:
         exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
                       custom_exceptions.Error)
         try:
-            query.lower()
+            query = query.lower()
             client = DB('danbooru')
             if 'rating' in query:
                 raise custom_exceptions.NSFWException('Good try, pervy!')
@@ -46,7 +46,6 @@ class Danbooru:
         exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
                       custom_exceptions.Error)
         try:
-            query.lower()
             if not ctx.channel.nsfw:
                 raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels!')
             client = DB('danbooru')
@@ -68,7 +67,6 @@ class Danbooru:
         """Retrieves tags that matches you query."""
         exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
         try:
-            match.lower()
             client = DB('danbooru')
             list_tags = client.tag_list(name_matches=match)
             related_tags = [i['related_tags'] for i in list_tags]
@@ -87,7 +85,6 @@ class Danbooru:
         """Retrieve pool names and id from your query."""
         exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
         try:
-            match.lower()
             client = DB('danbooru')
             pool_list = client.pool_list(name_matches=match)
             if not pool_list:

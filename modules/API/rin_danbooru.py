@@ -19,7 +19,8 @@ class Danbooru:
     async def danbooru(self, ctx, *, query: str):
         """Connects with the Danbooru client and retrieve a random image
         from a post list (only SFW channels)."""
-        exceptions = custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound, Exception
+        exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
+                      custom_exceptions.Error)
         try:
             query.lower()
             client = DB('danbooru')
@@ -34,15 +35,16 @@ class Danbooru:
             embed.set_image(url=image_url)
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
-        except (exceptions) as e:
+        except exceptions as e:
             await ctx.send(e)
 
     @danbooru.command(aliases=['n'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def nsfw(selfs, ctx, *, query: str):
+    async def nsfw(self, ctx, *, query: str):
         """Connects with Danbooru client and retrieve a random image
         from a post list (only NSFW channels)."""
-        exceptions = custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound, Exception
+        exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
+                      custom_exceptions.Error)
         try:
             query.lower()
             if not ctx.channel.nsfw:
@@ -57,14 +59,14 @@ class Danbooru:
             embed.set_image(url=image_url)
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
-        except (exceptions) as e:
+        except exceptions as e:
             await ctx.send(e)
 
     @danbooru.command(aliases=['t'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def tags(self, ctx, *, match: str):
         """Retrieves tags that matches you query."""
-        exceptions = custom_exceptions.ResourceNotFound, Exception
+        exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
         try:
             match.lower()
             client = DB('danbooru')
@@ -76,14 +78,14 @@ class Danbooru:
             pages = Pages(ctx, lines=tuple(tags.split()))
             await ctx.message.add_reaction('\U00002705')
             await pages.paginate()
-        except (exceptions) as e:
+        except exceptions as e:
             await ctx.send(e)
 
     @danbooru.command(aliases=['p'])
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def pool(self, ctx, *, match: str):
         """Retrieve pool names and id from your query."""
-        exceptions = custom_exceptions.ResourceNotFound, Exception
+        exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
         try:
             match.lower()
             client = DB('danbooru')
@@ -96,7 +98,7 @@ class Danbooru:
             pages = Pages(ctx, lines=names_ids)
             await ctx.message.add_reaction('\U00002705')
             await pages.paginate()
-        except (exceptions) as e:
+        except exceptions as e:
             await ctx.send(e)
 
 

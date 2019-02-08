@@ -20,16 +20,17 @@ class ZeroChan:
         that matches you query."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/search/{query}/{pages}') as response:
+                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
                 try:
                     data = (await response.json())['data']
                     random_image = choice(data)['thumb']
                     if not random_image:
-                        raise custom_exceptions.ImageNotFound('Image not found.')
+                        raise custom_exceptions.ResourceNotFound('Image not found.')
                     embed = Embed(color=Colour.red())
                     embed.set_image(url=random_image)
                     await ctx.message.add_reaction('\U00002705')
                     await ctx.send(embed=embed)
-                except (custom_exceptions.ImageNotFound, Exception) as e:
+                except exceptions as e:
                     await ctx.send(e)
 
     @zerochan.command(aliases=['i'])
@@ -38,16 +39,17 @@ class ZeroChan:
         """Input a image_id and output a entire image."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/image/{id}') as response:
+                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
                 try:
                     data = (await response.json())['data']
                     image = data['url']
                     if not image:
-                        raise custom_exceptions.ImageNotFound('Image not found.')
+                        raise custom_exceptions.ResourceNotFound('Image not found.')
                     embed = Embed(color=Colour.red())
                     embed.set_image(url=image)
                     await ctx.message.add_reaction('\U00002705')
                     await ctx.send(embed=embed)
-                except (custom_exceptions.ImageNotFound, Exception) as e:
+                except exceptions as e:
                     await ctx.send(e)
 
     @zerochan.command(aliases=['info', 'in'])
@@ -56,14 +58,15 @@ class ZeroChan:
         """Sends information about a tag."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/info/{query}') as response:
+                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
                 try:
                     info = (await response.json())['data']
                     if not info:
-                        raise custom_exceptions.InfoNotFound('Info not found.')
+                        raise custom_exceptions.ResourceNotFound('Info not found.')
                     info = info[:1980] + '...' if len(info) >= 2000 else info
                     await ctx.send('```fix\n' + info + '\n```')
                     await ctx.send(f'See more at: ```fix\nhttps://zerochan.net/{query}\n```')
-                except (custom_exceptions.InfoNotFound, Exception) as e:
+                except exceptions as e:
                     await ctx.send(e)
 
     @zerochan.command(aliases=['m'])
@@ -72,15 +75,16 @@ class ZeroChan:
         """Retrieve tags from meta-tags."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/meta/{query}') as response:
+                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
                 try:
                     data = (await response.json())['data']
                     if not data:
-                        raise custom_exceptions.TagsNotFound('Tags not found')
+                        raise custom_exceptions.ResourceNotFound('Tags not found')
                     pages = Pages(ctx, lines=tuple(i['name'] for i in data))
                     await ctx.message.add_reaction('\U00002705')
                     await pages.paginate()
-                except:
-                    await ctx.send('Meta not found.')
+                except exceptions as e:
+                    await ctx.send(e)
 
 
 def setup(bot):

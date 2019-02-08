@@ -28,6 +28,10 @@ class Essentials:
         except Exception as e:
             await ctx.send(e)
 
+    @commands.command(aliases=['p'])
+    async def ping(self, ctx):
+        """Send bot latency in ms"""
+        await ctx.send(f'Ping: {round(self.bot.latency * 1000, 2)}')
 
 def setup(bot):
     bot.add_cog(Essentials(bot))

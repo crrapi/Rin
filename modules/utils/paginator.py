@@ -2,7 +2,6 @@ import asyncio
 import inspect
 import itertools
 import re
-
 import discord
 
 
@@ -296,8 +295,6 @@ def _command_signature(cmd):
 class HelpPaginator(Pages):
     def __init__(self, ctx, lines, *, per_page=4):
         super().__init__(ctx, lines=lines, per_page=per_page)
-        self.reaction_emojis.append(
-            ('\N{WHITE QUESTION MARK ORNAMENT}', self.show_bot_help))
         self.total = len(lines)
 
     @classmethod
@@ -409,21 +406,6 @@ class HelpPaginator(Pages):
             self.embed.set_author(
                 name=f'Page {page}/{self.maximum_pages} ({self.total} commands)')
 
-    async def show_help(self):
-        """shows this message"""
-
-        self.embed.title = 'Paginator help'
-        self.embed.description = 'Hello! Welcome to the help page.'
-
-        messages = [f'{emoji} {func.__doc__}' for emoji,
-                    func in self.reaction_emojis]
-        self.embed.clear_fields()
-        self.embed.add_field(name='What are these reactions for?',
-                             value='\n'.join(messages), inline=False)
-
-        self.embed.set_footer(
-            text=f'We were on page {self.current_page} before this message.')
-        await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():
             await asyncio.sleep(30.0)
@@ -431,34 +413,9 @@ class HelpPaginator(Pages):
 
         self.bot.loop.create_task(go_back_to_current_page())
 
-    async def show_bot_help(self):
-        """shows how to use the bot"""
-
-        self.embed.title = 'Using the bot'
-        self.embed.description = 'Hello! Welcome to the help page.'
-        self.embed.clear_fields()
-
-        lines = (
-            ('<argument>', 'This means the argument is __**required**__.'),
-            ('[argument]', 'This means the argument is __**optional**__.'),
-            ('[A|B]', 'This means the it can be __**either A or B**__.'),
-            ('[argument...]', 'This means you can have multiple arguments.\n'
-                              'Now that you know the basics, it should be noted that...\n'
-                              '__**You do not type in the brackets!**__')
-        )
-
-        self.embed.add_field(name='How do I use this bot?',
-                             value='Reading the bot signature is pretty simple.')
-
-        for name, value in lines:
-            self.embed.add_field(name=name, value=value, inline=False)
-
-        self.embed.set_footer(
-            text=f'We were on page {self.current_page} before this message.')
-        await self.message.edit(embed=self.embed)
-
         async def go_back_to_current_page():
             await asyncio.sleep(30.0)
             await self.show_current_page()
 
         self.bot.loop.create_task(go_back_to_current_page())
+

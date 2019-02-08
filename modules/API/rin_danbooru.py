@@ -20,10 +20,9 @@ class Danbooru:
         """Connects with the Danbooru client and retrieve a random image
         from a post list (only SFW channels)."""
         try:
+            query.lower()
             client = DB('danbooru')
-            if 'rating:explicit' in query:
-                raise custom_exceptions.NSFWException('Good try, pervy!')
-            elif 'rating:questionable' in query:
+            if 'rating' in query:
                 raise custom_exceptions.NSFWException('Good try, pervy!')
             post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=1)
             image_url = choice(post)['file_url']
@@ -42,6 +41,7 @@ class Danbooru:
         """Connects with Danbooru client and retrieve a random image
         from a post list (only NSFW channels)."""
         try:
+            query.lower()
             if not ctx.channel.nsfw:
                 raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels!')
             client = DB('danbooru')
@@ -61,6 +61,7 @@ class Danbooru:
     async def tags(self, ctx, *, match: str):
         """Retrieves tags that matches you query."""
         try:
+            match.lower()
             client = DB('danbooru')
             list_tags = client.tag_list(name_matches=match)
             related_tags = [i['related_tags'] for i in list_tags]
@@ -78,6 +79,7 @@ class Danbooru:
     async def pool(self, ctx, *, match: str):
         """Retrieve pool names and id from your query."""
         try:
+            match.lower()
             client = DB('danbooru')
             pool_list = client.pool_list(name_matches=match)
             if not pool_list:

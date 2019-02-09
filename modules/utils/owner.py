@@ -10,3 +10,7 @@ class Owner():
     async def logout(self, ctx):
         """Stop the process that bot's running"""
         await ctx.invoke(self.bot.get_command('jsk py'), 'await _bot.logout()')
+
+
+def setup(bot):
+    bot.add_cog(Owner(bot))

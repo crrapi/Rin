@@ -47,9 +47,9 @@ class Essentials:
                 'c3dc0a076be76b5690ca69ddcd14c465.png')
         embed.add_field(name='Name', value='Rin', inline=True)
         embed.add_field(name='Owner', value='reformed#5680', inline=True)
-        embed.add_field(name='Prefix', value='rin', inline=True)
         embed.add_field(name='Python Version', value=f'{sys.version}', inline=True)
         embed.add_field(name='Library', value='discord.py [rewrite]', inline=True)
+        embed.add_field(name='Prefix', value='rin', inline=True)
         embed.add_field(name='Ping', value=f'{round(self.bot.latency * 1000, 2)} ms', inline=True)
         embed.add_field(name='Support', value='Support server: https://discord.gg/HaCgM7y', inline=True)
 

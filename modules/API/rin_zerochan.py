@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import randint
 
 from aiohttp import ClientSession
 from discord import Colour, Embed
@@ -9,6 +9,7 @@ from ..utils.paginator import Pages
 
 
 class ZeroChan:
+    """Commands for ZeroChan integration"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -20,10 +21,10 @@ class ZeroChan:
         that matches you query."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/search/{query}/{pages}') as response:
-                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
+                exceptions = (custom_exceptions.ResourceNotFound, Exception)
                 try:
                     data = (await response.json())['data']
-                    random_image = choice(data)['thumb']
+                    random_image = data[0]['thumb']
                     if not random_image:
                         raise custom_exceptions.ResourceNotFound('Image not found.')
                     embed = Embed(color=Colour.red())
@@ -39,7 +40,7 @@ class ZeroChan:
         """Input a image_id and output a entire image."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/image/{id}') as response:
-                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
+                exceptions = (custom_exceptions.ResourceNotFound, Exception)
                 try:
                     data = (await response.json())['data']
                     image = data['url']
@@ -58,7 +59,7 @@ class ZeroChan:
         """Sends information about a tag."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/info/{query}') as response:
-                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
+                exceptions = (custom_exceptions.ResourceNotFound, Exception)
                 try:
                     info = (await response.json())['data']
                     if not info:
@@ -75,7 +76,7 @@ class ZeroChan:
         """Retrieve tags from meta-tags."""
         async with ClientSession() as session:
             async with session.post(f'https://rin-zerochan.herokuapp.com/meta/{query}') as response:
-                exceptions = (custom_exceptions.ResourceNotFound, custom_exceptions.Error)
+                exceptions = (custom_exceptions.ResourceNotFound, Exception)
                 try:
                     data = (await response.json())['data']
                     if not data:

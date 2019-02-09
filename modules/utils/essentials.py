@@ -45,6 +45,7 @@ class Essentials:
             url='https://cdn.discordapp.com/avatars/' +
                 '540345349576065065/' +
                 'c3dc0a076be76b5690ca69ddcd14c465.png')
+        embed.add_field(name='Name', value='Rin Tohsaka', inline=True)
         embed.add_field(name='Owner', value='reformed#5680', inline=True)
         embed.add_field(name='Prefix', value='rin', inline=True)
         embed.add_field(name='Library', value='discord.py [rewrite]', inline=True)

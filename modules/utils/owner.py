@@ -10,6 +10,7 @@ class Owner:
     @commands.is_owner()
     async def logout(self, ctx):
         """Stop the process that bot's running"""
+        await ctx.message.add_reaction('\U0001f525')
         await self.bot.logout()
 
 

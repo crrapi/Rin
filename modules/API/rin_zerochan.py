@@ -3,8 +3,7 @@ from random import randint
 
 from discord import Colour, Embed
 from discord.ext import commands
-
-from ..utils import zerochan
+import zerochan
 from ..utils.paginator import Pages
 
 
@@ -17,7 +16,7 @@ class ZeroChan:
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def zerochan(self, ctx, *, query: str, page=randint(1, 10)):
-        """Connects with the rin-zerochan API and retrieves images
+        """Connects with the zerochan API and retrieves images
         that matches you query."""
         exceptions = (ValueError, Exception)
         try:

@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 class Owner:
-    """Owner commands"""
+    """Commands for owner only"""
 
     def __init__(self, bot):
         self.bot = bot

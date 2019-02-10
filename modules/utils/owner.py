@@ -7,9 +7,10 @@ class Owner:
         self.bot = bot
 
     @commands.command(aliases=['die', 'kys'])
+    @commands.is_owner()
     async def logout(self, ctx):
         """Stop the process that bot's running"""
-        await ctx.invoke(self.bot.get_command('jsk'), 'py await _bot.logout()')
+        await self.bot.logout()
 
 
 def setup(bot):

@@ -33,7 +33,7 @@ class Danbooru:
             post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=20)
             if not post:
                 raise custom_exceptions.ResourceNotFound('Image not found.')
-            image = post[randint(1, 21)]['file_url']
+            image = post[randint(0, 20)]['file_url']
             embed = Embed(color=Colour.red())
             embed.set_image(url=image)
             await ctx.message.add_reaction('\U00002705')
@@ -60,7 +60,7 @@ class Danbooru:
             post = client.post_list(tags=query, page=randint(1, 1000), limit=20)
             if not post:
                 raise custom_exceptions.ResourceNotFound('Image not found')
-            image = post[randint(1, 21)]['file_url']
+            image = post[randint(0, 20)]['file_url']
             embed = Embed(color=Colour.red())
             embed.set_image(url=image)
             await ctx.message.add_reaction('\U00002705')

@@ -15,8 +15,8 @@ class ZeroChan:
         self.bot = bot
 
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
-    @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def zerochan(self, ctx, *, query: str, page=randint(0, 11)):
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def zerochan(self, ctx, *, query: str, page=randint(1, 10)):
         """Connects with the rin-zerochan API and retrieves images
         that matches you query."""
         exceptions = (ValueError, Exception)
@@ -24,7 +24,7 @@ class ZeroChan:
             search_str = await zerochan.search(query, page)
             search_list = json.dumps(search_str)
             images_list = json.loads(search_list)
-            random_image = images_list[randint(0, 11)]['thumb']
+            random_image = images_list[randint(1, 10)]['thumb']
             embed = Embed(color=Colour.red())
             embed.set_image(url=random_image)
             await ctx.message.add_reaction('\U00002705')
@@ -34,7 +34,7 @@ class ZeroChan:
             await ctx.send(e)
 
     @zerochan.command(aliases=['img'])
-    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def image(self, ctx, image_id: str):
         """Input a image_id and output a entire image."""
         exceptions = (ValueError, Exception)
@@ -52,7 +52,7 @@ class ZeroChan:
             await ctx.send(e)
 
     @zerochan.command(aliases=['info'])
-    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def information(self, ctx, *, query: str):
         """Sends information about a tag."""
         exceptions = (ValueError, Exception)
@@ -66,8 +66,8 @@ class ZeroChan:
             await ctx.send(e)
 
     @zerochan.command(aliases=['m'])
-    @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def meta(self, ctx, *, query: str, page=randint(0, 11)):
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def meta(self, ctx, *, query: str, page=randint(1, 10)):
         """Retrieve tags from meta-tags."""
         exceptions = (ValueError, Exception)
         try:

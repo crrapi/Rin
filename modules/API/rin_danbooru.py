@@ -30,10 +30,10 @@ class Danbooru:
             if 'rating' in query:
                 raise custom_exceptions.NSFWException('Good try, pervy!')
             client = Client('danbooru')
-            post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=1)
+            post = client.post_list(tags='rating:safe ' + query, page=randint(1, 1000), limit=20)
             if not post:
                 raise custom_exceptions.ResourceNotFound('Image not found.')
-            image = post[0]['file_url']
+            image = post[randint(1, 21)]['file_url']
             embed = Embed(color=Colour.red())
             embed.set_image(url=image)
             await ctx.message.add_reaction('\U00002705')
@@ -56,12 +56,13 @@ class Danbooru:
                 raise custom_exceptions.Error('You can\'t input 3 or more tags.')
             query = ' '.join(query)
             client = Client('danbooru')
-            post = client.post_list(tags=query, page=randint(1, 1000), limit=1)
+            post = client.post_list(tags=query, page=randint(1, 1000), limit=20)
             if not post:
                 raise custom_exceptions.ResourceNotFound('Image not found')
-            image = post[0]['file_url']
+            image = post[randint(1, 21)]['file_url']
             embed = Embed(color=Colour.red())
             embed.set_image(url=image)
+            await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.send(e)

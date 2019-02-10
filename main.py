@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    print(f'Hello World, I\'m {bot.user.name}')
-    await bot.change_presence(status=Status.idle, activity=Game('Being code by reformed#5680'))
+    print(f'Hello World, I\'m {bot.user.name}!')
+    await bot.change_presence(status=Status.idle, activity=Game('In development!'))
 
 bot.load_extension('jishaku')
 bot.run(config['token'])

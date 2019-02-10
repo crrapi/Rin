@@ -39,6 +39,7 @@ class Danbooru:
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
+            await ctx.message.add_reaction('\U0000274c')
             await ctx.send(e)
 
     @danbooru.command(aliases=['n'])
@@ -65,6 +66,7 @@ class Danbooru:
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
+            await ctx.message.add_reaction('\U0000274c')
             await ctx.send(e)
 
     @danbooru.command(aliases=['t'])
@@ -83,6 +85,7 @@ class Danbooru:
             await ctx.message.add_reaction('\U00002705')
             await pages.paginate()
         except exceptions as e:
+            await ctx.message.add_reaction('\U0000274c')
             await ctx.send(e)
 
 

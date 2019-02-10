@@ -1,12 +1,13 @@
-import bs4
-import aiohttp
-
 from typing import AsyncGenerator, List
+
+import aiohttp
+import bs4
 
 TAGS_PER_META = 48
 IMAGES_PER_TAG = 24
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) '
                          'Gecko/20100101 Firefox/64.0'}
+
 
 async def get(query, **kwargs) -> bs4.BeautifulSoup:
     kwargs = '?'.join([f'{k}={v}' for k, v in kwargs.items()])
@@ -14,6 +15,7 @@ async def get(query, **kwargs) -> bs4.BeautifulSoup:
     async with aiohttp.ClientSession(headers=HEADERS) as session:
         async with session.get(url) as response:
             return bs4.BeautifulSoup(await response.text(), features='lxml')
+
 
 def get_list(soup, lid, error=ValueError) -> List[bs4.element.Tag]:
     try:
@@ -24,9 +26,10 @@ def get_list(soup, lid, error=ValueError) -> List[bs4.element.Tag]:
         raise StopAsyncIteration
     return sub
 
-async def meta(query:str, p:int) -> AsyncGenerator[dict, None]:
+
+async def meta(query: str, p: int) -> AsyncGenerator[dict, None]:
     soup = await get(query, p=p)
-    sub = get_list(soup, 'children', ValueError('MetaTag not Found'))
+    sub = get_list(soup, 'children', ValueError('Meta not found.'))
     c = 0
     for x in sub:
         c += 1
@@ -38,9 +41,10 @@ async def meta(query:str, p:int) -> AsyncGenerator[dict, None]:
         async for x in meta(query, p=p+1):
             yield x
 
-async def search(query:str, p:int) -> AsyncGenerator[dict, None]:
+
+async def search(query: str, p: int) -> AsyncGenerator[dict, None]:
     soup = await get(query, p=p)
-    sub = get_list(soup, 'thumbs2', ValueError('Search Failed'))
+    sub = get_list(soup, 'thumbs2', ValueError('Image not found.'))
     c = 0
     for x in sub:
         c += 1
@@ -51,9 +55,11 @@ async def search(query:str, p:int) -> AsyncGenerator[dict, None]:
     if c >= IMAGES_PER_TAG:
         async for x in search(query, p=p+1):
             yield x
-async def image(image_id:str) -> dict:
+
+
+async def image(image_id: str) -> dict:
     soup = await get(image_id)
-    tags = get_list(soup, 'tags', ValueError('Image not Found'))
+    tags = get_list(soup, 'tags', ValueError('Image not found.'))
     im = soup.find('a', {'class': 'preview'})['href']
     tags = [{'name': x.a.text, 'meta': x.text.replace(x.a.text, '', 1)[1:]}
             for x in tags]
@@ -66,7 +72,8 @@ async def image(image_id:str) -> dict:
         comments = []
     return {'url': im, 'tags': tags, 'comments': comments}
 
-async def info(query:str) -> str:
+
+async def info(query: str) -> str:
     soup = await get(query)
     try:
         return soup.find('div', {'id': 'menu'}).findAll('p')[1].text

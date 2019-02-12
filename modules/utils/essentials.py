@@ -55,8 +55,7 @@ class Essentials:
         embed.add_field(name='Source', value='Soon™', inline=True)
         await ctx.send(embed=embed)
 
- @commands.command(aliases=['delete', 'p'])
- @commands.has_permissions(manage_guild=True)
+ 	@commands.command(aliases=['delete', 'p']	   @commands.has_permissions(manage_guild=True)
     async def purge(self, ctx, amount: int=None):
         """Delete messages by ammount"""
         exceptions = (commands.MissingRequiredArgument,commands.BadArgument, Exception)

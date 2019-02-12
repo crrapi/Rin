@@ -3,7 +3,7 @@ from random import randint
 
 from discord import Colour, Embed
 from discord.ext import commands
-import zerochan
+from rin_zerochan import zerochan
 from ..utils.paginator import Pages
 
 

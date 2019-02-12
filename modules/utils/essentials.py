@@ -55,6 +55,20 @@ class Essentials:
         embed.add_field(name='Bot Invite', value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133&permissions=0&scope=bot)', inline=True)
         await ctx.send(embed=embed)
 
+@commands.command(aliases=['delete', 'p']	   @commands.has_permissions(manage_guild=True)
+    async def purge(self, ctx, amount: int=None):
+        """Delete messages by ammount"""
+        exceptions = (commands.MissingRequiredArgument,commands.BadArgument, Exception)
+        try:
+        	if amount is None:
+            	raise commands.MissingRequiredArgument('Missing required argument: amount')
+        	if amount>500 or amount<0:
+            	raise commands.BadArgument('You cant input a ammount less than 0 or higher than 500')
+        	await ctx.message.delete()
+        	await ctx.message.channel.purge(limit=amount)
+        	await ctx.send(f'Deleted {int(amount)} messages.', delete_after=5)
+		except exceptions as e:
+			await ctx.send(e)
 
 def setup(bot):
     bot.add_cog(Essentials(bot))

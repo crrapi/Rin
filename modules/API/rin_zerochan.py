@@ -3,7 +3,7 @@ from random import randint
 
 from discord import Colour, Embed
 from discord.ext import commands
-import zerochan
+from rin_zerochan import zerochan
 from ..utils.paginator import Pages
 
 
@@ -16,7 +16,7 @@ class ZeroChan:
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def zerochan(self, ctx, *, query: str, page=randint(1, 10)):
-        """Connects with the zerochan API and retrieves images
+        """Connects with the rin_zerochan library and retrieves images
         that matches you query."""
         exceptions = (ValueError, Exception)
         try:
@@ -59,7 +59,7 @@ class ZeroChan:
             info = await zerochan.info(query)
             info = info[:1980] + '...' if len(info) >= 2000 else info
             await ctx.send('```fix\n' + info + '\n```')
-            await ctx.send(f'See more at: ```fix\nhttps://zerochan.net/{query}\n```')
+            await ctx.send(f'See more at: ```fix\nhttps://rin-zerochan.py.net/{query}\n```')
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
             await ctx.send(e)

@@ -52,7 +52,7 @@ class Essentials:
         embed.add_field(name='Prefix', value='rin', inline=True)
         embed.add_field(name='Ping', value=f'{round(self.bot.latency * 1000, 2)} ms', inline=True)
         embed.add_field(name='Support', value='[Server](https://discord.gg/HaCgM7y)', inline=True)
-        embed.add_field(name='Source', value='Soon™', inline=True)
+        embed.add_field(name='Bot Invite', value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133&permissions=0&scope=bot)', inline=True)
         await ctx.send(embed=embed)
 
 

@@ -19,8 +19,7 @@ async def get_prefix(bot, message):
 extensions = ['modules.utils.errors',
               'modules.API.rin_zerochan',
               'modules.API.rin_danbooru',
-              'modules.utils.essentials',
-              'modules.utils.owner']
+              'modules.utils.essentials']
 
 bot = commands.Bot(command_prefix=get_prefix)
 

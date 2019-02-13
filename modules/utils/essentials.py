@@ -1,6 +1,7 @@
 import discord
 import sys
-
+import psutil
+import humanize
 from discord.ext import commands
 
 from .paginator import HelpPaginator
@@ -20,6 +21,15 @@ def check_amount(amount):
     if amount < 0 or amount > 500:
         raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
 
+def get_cpu_usage():
+    proc = psutil.Process()
+    cpu = proc.cpu_percent()
+    return cpu
+
+def get_mem_usage():
+    proc = psutil.Process()
+    mem = proc.memory_full_info().uss
+    return humanize.naturalsize(mem)
 
 class Essentials:
     """Essentials commands for bot usage"""
@@ -59,7 +69,7 @@ class Essentials:
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def info(self, ctx):
         """Sends bot info"""
-        embed = discord.Embed(color=discord.Colour.red(), title='Bot information')
+        embed = discord.Embed(color=discord.Colour.red())
         embed.set_thumbnail(
             url='https://cdn.discordapp.com/avatars/' +
                 '540345349576065065/' +
@@ -91,6 +101,14 @@ class Essentials:
         except exceptions as e:
             await ctx.send(e)
 
+    @commands.command(aliases=['u'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def usage(self, ctx):
+        """Currently usage of this python process"""
+        embed = discord.Embed(color=discord.Colour.red())
+        embed.add_field(name='CPU', value=f'{get_cpu_usage()}%')
+        embed.add_field(name='RAM', value=f'{get_mem_usage()}')
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Essentials(bot))

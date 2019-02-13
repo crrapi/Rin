@@ -2,7 +2,23 @@ import discord
 import sys
 
 from discord.ext import commands
+
 from .paginator import HelpPaginator
+
+
+def check_permissions():
+    if commands.bot_has_permissions(perms='manage_guild') == True and \
+            commands.has_permissions(perms='manage_guild') == True:
+        return
+    else:
+        raise commands.MissingPermissions(missing_perms=['manage_guild'])
+
+
+def check_amount(amount):
+    if amount is None:
+        raise commands.UserInputError('Input a amount of messages that you want to be deleted.')
+    if amount < 0 or amount > 500:
+        raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
 
 
 class Essentials:
@@ -13,6 +29,7 @@ class Essentials:
         bot.remove_command('help')
 
     @commands.command(name='help')
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def _help(self, ctx, *, command: str = None):
         """All commands support"""
         global pages
@@ -33,11 +50,13 @@ class Essentials:
             await ctx.send(e)
 
     @commands.command(aliases=['p'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def ping(self, ctx):
         """Sends bot latency in ms"""
         await ctx.send(f'Ping: {round(self.bot.latency * 1000, 2)} ms')
 
     @commands.command(aliases=['i'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def info(self, ctx):
         """Sends bot info"""
         embed = discord.Embed(color=discord.Colour.red(), title='Bot information')
@@ -50,25 +69,28 @@ class Essentials:
         embed.add_field(name='Python Version', value=f'{sys.version[:5]}', inline=True)
         embed.add_field(name='Library', value='discord.py [rewrite]', inline=True)
         embed.add_field(name='Prefix', value='rin', inline=True)
-        embed.add_field(name='Ping', value=f'{round(self.bot.latency * 1000, 2)} ms', inline=True)
+        embed.add_field(name='Source', value='[GitHub](https://github.com/reformed5680/Rin)', inline=True)
         embed.add_field(name='Support', value='[Server](https://discord.gg/HaCgM7y)', inline=True)
-        embed.add_field(name='Bot Invite', value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133&permissions=0&scope=bot)', inline=True)
+        embed.add_field(name='Bot Invite',
+                        value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133&permissions=0&scope=bot)',
+                        inline=True)
         await ctx.send(embed=embed)
 
-@commands.command(aliases=['delete', 'p']	   @commands.has_permissions(manage_guild=True)
-    async def purge(self, ctx, amount: int=None):
+    @commands.command(aliases=['delete', 'del', 'd'])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def purge(self, ctx, amount: int = None):
         """Delete messages by ammount"""
-        exceptions = (commands.MissingRequiredArgument,commands.BadArgument, Exception)
+        exceptions = (commands.UserInputError, commands.BadArgument, commands.MissingPermissions,
+                      commands.BotMissingPermissions, Exception)
         try:
-        	if amount is None:
-            	raise commands.MissingRequiredArgument('Missing required argument: amount')
-        	if amount>500 or amount<0:
-            	raise commands.BadArgument('You cant input a ammount less than 0 or higher than 500')
-        	await ctx.message.delete()
-        	await ctx.message.channel.purge(limit=amount)
-        	await ctx.send(f'Deleted {int(amount)} messages.', delete_after=5)
-		except exceptions as e:
-			await ctx.send(e)
+            check_amount(amount)
+            check_permissions()
+            await ctx.message.delete()
+            await ctx.message.channel.purge(limit=amount)
+            await ctx.send(f'Deleted {int(amount)} messages.', delete_after=5)
+        except exceptions as e:
+            await ctx.send(e)
+
 
 def setup(bot):
     bot.add_cog(Essentials(bot))

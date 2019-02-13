@@ -17,9 +17,6 @@ class ErrorHandler:
         if isinstance(error, commands.CommandNotFound):
             return await ctx.send(f'This is not a command...')
 
-        elif isinstance(error, commands.UserInputError):
-            return await ctx.send('Use a valid input instead.')
-
         elif isinstance(error, commands.NotOwner):
             return await ctx.message.add_reaction('\U0001f6ab')
 

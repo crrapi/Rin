@@ -24,9 +24,6 @@ class ErrorHandler:
             seconds = error.retry_after
             return await ctx.send(f'Try again in {seconds:.2f} seconds!')
 
-        elif isinstance(error, KeyError):
-            return await ctx.send('Image not found.')
-
         elif isinstance(error, errors.HTTPException):
             return await ctx.send('Cannot send an empty message.')
 

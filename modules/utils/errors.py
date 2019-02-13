@@ -30,6 +30,9 @@ class ErrorHandler:
         elif isinstance(error, errors.HTTPException):
             return await ctx.send('Cannot send an empty message.')
 
+        elif isinstance(error, commands.MissingPermissions):
+            return await ctx.send('I don\'t have permission to do that')
+
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 

@@ -1,18 +1,11 @@
-import discord
 import sys
-import psutil
+
+import discord
 import humanize
+import psutil
 from discord.ext import commands
 
 from .paginator import HelpPaginator
-
-
-def check_permissions():
-    if commands.bot_has_permissions(perms='manage_guild') == True and \
-            commands.has_permissions(perms='manage_guild') == True:
-        return
-    else:
-        raise commands.MissingPermissions(missing_perms=['manage_guild'])
 
 
 def check_amount(amount):
@@ -88,13 +81,13 @@ class Essentials:
 
     @commands.command(aliases=['delete', 'del', 'd'])
     @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.has_permissions(manage_guild=True)
     async def purge(self, ctx, amount: int = None):
         """Delete messages by ammount"""
         exceptions = (commands.UserInputError, commands.BadArgument, commands.MissingPermissions,
                       commands.BotMissingPermissions, Exception)
         try:
             check_amount(amount)
-            check_permissions()
             await ctx.message.delete()
             await ctx.message.channel.purge(limit=amount)
             await ctx.send(f'Deleted {int(amount)} messages.', delete_after=5)

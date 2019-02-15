@@ -14,10 +14,7 @@ class ErrorHandler:
 
         error = getattr(error, 'original', error)
 
-        if isinstance(error, commands.CommandNotFound):
-            return await ctx.send(f'This is not a command...')
-
-        elif isinstance(error, commands.NotOwner):
+        if isinstance(error, commands.NotOwner):
             return await ctx.message.add_reaction('\U0001f6ab')
 
         elif isinstance(error, commands.CommandOnCooldown):

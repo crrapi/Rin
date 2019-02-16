@@ -69,10 +69,10 @@ class Information:
         embed.add_field(name='Library', value='discord.py [rewrite]', inline=True)
         embed.add_field(name='Prefix', value='rin', inline=True)
         embed.add_field(name='Source', value='[GitHub](https://github.com/reformed5680/Rin)', inline=True)
-        embed.add_field(name='Support', value='[Server](https://discord.gg/HaCgM7y)', inline=True)
+        embed.add_field(name='Support', value='[Server](https://discord.gg/tdVZsDv)', inline=True)
         embed.add_field(name='Bot Invite',
-                        value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133'
-                              '&permissions=0&scope=bot)',
+                        value='[Invite](https://discordapp.com/oauth2/authorize?client_id=545661874809864233&scope'
+                              '=bot&permissions=0)',
                         inline=True)
         await ctx.send(embed=embed)
 

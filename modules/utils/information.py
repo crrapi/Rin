@@ -8,24 +8,20 @@ from discord.ext import commands
 from .paginator import HelpPaginator
 
 
-def check_amount(amount):
-    if amount is None:
-        raise commands.UserInputError('Input a amount of messages that you want to be deleted.')
-    if amount < 0 or amount > 500:
-        raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
-
 def get_cpu_usage():
     proc = psutil.Process()
     cpu = proc.cpu_percent()
     return cpu
+
 
 def get_mem_usage():
     proc = psutil.Process()
     mem = proc.memory_full_info().uss
     return humanize.naturalsize(mem)
 
-class Essentials:
-    """Essentials commands for bot usage"""
+
+class Information:
+    """Commands for bot information"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -75,24 +71,10 @@ class Essentials:
         embed.add_field(name='Source', value='[GitHub](https://github.com/reformed5680/Rin)', inline=True)
         embed.add_field(name='Support', value='[Server](https://discord.gg/HaCgM7y)', inline=True)
         embed.add_field(name='Bot Invite',
-                        value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133&permissions=0&scope=bot)',
+                        value='[Invite](https://discordapp.com/api/oauth2/authorize?client_id=541341902922842133'
+                              '&permissions=0&scope=bot)',
                         inline=True)
         await ctx.send(embed=embed)
-
-    @commands.command(aliases=['delete', 'del', 'd'])
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.has_permissions(manage_guild=True)
-    async def purge(self, ctx, amount: int = None):
-        """Delete messages by ammount"""
-        exceptions = (commands.UserInputError, commands.BadArgument, commands.MissingPermissions,
-                      commands.BotMissingPermissions, Exception)
-        try:
-            check_amount(amount)
-            await ctx.message.delete()
-            await ctx.message.channel.purge(limit=amount)
-            await ctx.send(f'Deleted {int(amount)} messages.', delete_after=5)
-        except exceptions as e:
-            await ctx.send(e)
 
     @commands.command(aliases=['u'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -103,5 +85,6 @@ class Essentials:
         embed.add_field(name='RAM', value=f'{get_mem_usage()}')
         await ctx.send(embed=embed)
 
+
 def setup(bot):
-    bot.add_cog(Essentials(bot))
+    bot.add_cog(Information(bot))

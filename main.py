@@ -1,43 +1,41 @@
-from json import load
+import json
 
-from discord import Status, Game
+import discord
 from discord.ext import commands
 
 # Put your token in a file called config.json, if you want to self-host
 with open('config.json') as file:
-    config = load(file)
+    config = json.load(file)
 
 
-async def get_prefix(bot, message):
-    prefixes = ['rin ']
+async def get_prefix(_bot, message):
+    prefixes = ('rin ',)
 
-    if not message.guild:
-        return '?'
+    return commands.when_mentioned_or(*prefixes)(_bot, message)
 
-    return commands.when_mentioned_or(*prefixes)(bot, message)
-
-extensions = ['modules.utils.errors',
+extensions = ('modules.API.rin_danbooru',
               'modules.API.rin_zerochan',
-              'modules.API.rin_danbooru',
-              'modules.utils.essentials']
+              'modules.discord.moderation',
+              'modules.utils.errors',
+              'modules.utils.information')
 
 bot = commands.Bot(command_prefix=get_prefix)
 
 if __name__ == '__main__':
     for extension in extensions:
         try:
-            print(f'Loading {extension}...')
             bot.load_extension(extension)
             print(f'Loaded {extension}!')
-        except:
-            print(f'Failed to load extension {extension}')
+        except discord.ClientException:
+            print(f'{extension} does not have a setup...')
+        except (ImportError, Exception):
+            print(f'Failed to load {extension}...')
 
 
 @bot.event
 async def on_ready():
     print(f'Hello World, I\'m {bot.user.name}!')
-    await bot.change_presence(status=Status.idle, activity=Game('In development!'))
+    await bot.change_presence(status=discord.Status.idle, activity=discord.Game('In development!'))
 
 bot.load_extension('jishaku')
 bot.run(config['token'])
-

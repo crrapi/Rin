@@ -21,9 +21,6 @@ class ErrorHandler:
             seconds = error.retry_after
             return await ctx.send(f'Try again in {seconds:.2f} seconds!')
 
-        elif isinstance(error, errors.HTTPException):
-            return await ctx.send('Cannot send an empty message.')
-
         elif isinstance(error, commands.MissingPermissions):
             return await ctx.send('I don\'t have permission to do that')
 

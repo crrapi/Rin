@@ -1,10 +1,12 @@
 import json
-from random import randint
+import random
 
-from discord import Colour, Embed
+import discord
 from discord.ext import commands
 from rin_zerochan import zerochan
+
 from ..utils.paginator import Pages
+from ..utils import custom_exceptions
 
 
 class ZeroChan:
@@ -15,7 +17,7 @@ class ZeroChan:
 
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def zerochan(self, ctx, *, query: str, page=randint(1, 10)):
+    async def zerochan(self, ctx, *, query: str, page=random.randint(1, 10)):
         """Connects with the rin_zerochan library and retrieves images
         that matches you query."""
         exceptions = (ValueError, Exception)
@@ -23,8 +25,8 @@ class ZeroChan:
             search_str = await zerochan.search(query, page)
             search_list = json.dumps(search_str)
             images_list = json.loads(search_list)
-            random_image = images_list[randint(1, 10)]['thumb']
-            embed = Embed(color=Colour.red())
+            random_image = random.choice(images_list)['thumb']
+            embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=random_image)
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
@@ -36,13 +38,13 @@ class ZeroChan:
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def image(self, ctx, image_id: str):
         """Input a image_id and output a entire image."""
-        exceptions = (ValueError, Exception)
+        exceptions = (custom_exceptions.ResourceNotFound, ValueError, Exception)
         try:
             search_str = await zerochan.image(image_id)
             search_list = json.dumps(search_str)
             image_list = json.loads(search_list)
             random_image = image_list['url']
-            embed = Embed(color=Colour.red())
+            embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=random_image)
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
@@ -59,6 +61,7 @@ class ZeroChan:
             info = await zerochan.info(query)
             info = info[:1980] + '...' if len(info) >= 2000 else info
             await ctx.send('```fix\n' + info + '\n```')
+            await ctx.message.add_reaction('\U00002705')
             await ctx.send(f'See more at: ```fix\nhttps://rin-zerochan.py.net/{query}\n```')
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
@@ -66,7 +69,7 @@ class ZeroChan:
 
     @zerochan.command(aliases=['m'])
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def meta(self, ctx, *, query: str, page=randint(1, 10)):
+    async def meta(self, ctx, *, query: str, page=random.randint(1, 10)):
         """Retrieve tags from meta-tags."""
         exceptions = (ValueError, Exception)
         try:

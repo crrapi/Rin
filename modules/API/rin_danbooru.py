@@ -37,14 +37,12 @@ def check_nsfw(ctx):
 
 
 def return_valid_image(post):
-    file_url = post[0]['file_url']
-    source = post[0]['source']
-    if file_url:
-        return file_url
-    elif source:
-        return source
+    if not post:
+        raise custom_exceptions.ResourceNotFound('This tag doesn\'t exist')
+    elif not 'file_url' in post[0] and 'source' in post[0]:
+        return post[0]['source']
     else:
-        raise custom_exceptions.ResourceNotFound('Image not found.')
+        return post[0]['file_url']
 
 
 class Danbooru:
@@ -63,7 +61,7 @@ class Danbooru:
                       custom_exceptions.Error, Exception)
         try:
             query = check_query(query)
-            post = self.client.post_list(tags='rating:safe ' + query, page=random.randint(1, 1000), limit=1)
+            post = self.client.post_list(tags='rating:safe ' + query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
@@ -82,14 +80,14 @@ class Danbooru:
         try:
             check_nsfw(ctx)
             query = check_query(query)
-            post = self.client.post_list(tags=query, page=random.randint(1, 1000), limit=1)
+            post = self.client.post_list(tags=query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e)
+            await print(e)
 
     @danbooru.command(aliases=['t'])
     @commands.cooldown(1, 5, commands.BucketType.member)

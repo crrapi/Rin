@@ -51,7 +51,7 @@ class ZeroChan:
         self.bot = bot
 
     @commands.group(aliases=['zc'], pass_context=True, invoke_without_command=True)
-    # @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def zerochan(self, ctx, *, query: str):
         """Connects with the rin_zerochan library and retrieves images
         that matches you query."""

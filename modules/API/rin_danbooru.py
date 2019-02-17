@@ -39,7 +39,7 @@ def check_nsfw(ctx):
 def return_valid_image(post):
     if not post:
         raise custom_exceptions.ResourceNotFound('This tag doesn\'t exist')
-    elif not 'file_url' in post[0] and 'source' in post[0]:
+    elif not ('file_url' in post[0] or not ('source' in post[0])):
         return post[0]['source']
     else:
         return post[0]['file_url']

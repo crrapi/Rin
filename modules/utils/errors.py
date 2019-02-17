@@ -1,7 +1,6 @@
 import sys
 import traceback
 
-from discord import errors
 from discord.ext import commands
 
 class ErrorHandler:
@@ -15,14 +14,11 @@ class ErrorHandler:
         error = getattr(error, 'original', error)
 
         if isinstance(error, commands.NotOwner):
-            return await ctx.message.add_reaction('\U0001f6ab')
+            return await ctx.message.add_reaction('\U0000274c')
 
         elif isinstance(error, commands.CommandOnCooldown):
             seconds = error.retry_after
             return await ctx.send(f'Try again in {seconds:.2f} seconds!')
-
-        elif isinstance(error, commands.MissingPermissions):
-            return await ctx.send('I don\'t have permission to do that')
 
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)

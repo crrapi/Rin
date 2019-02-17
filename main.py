@@ -9,7 +9,7 @@ with open('config.json') as file:
 
 
 async def get_prefix(_bot, message):
-    prefixes = ('rin ',)
+    prefixes = ['rin ']
 
     return commands.when_mentioned_or(*prefixes)(_bot, message)
 

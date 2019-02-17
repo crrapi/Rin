@@ -10,13 +10,13 @@ from ..utils.paginator import Pages
 
 
 def check_query(query):
-    query = query.lower().split()
+    new_query = query.lower().split()
     if 'rating' in query:
         raise custom_exceptions.NSFWException('Good try, pervy!')
-    if len(query) >= 2:
-        raise custom_exceptions.Error('You can\'t input 2 or more tags.')
-    query = ' '.join(query)
-    return query
+    if len(new_query) >= 2:
+        raise custom_exceptions.Error('Can\'t add two or more tags.')
+    new_query = ''.join(new_query)
+    return new_query
 
 
 def return_tags(list_tags):
@@ -60,8 +60,8 @@ class Danbooru:
         exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
                       custom_exceptions.Error, Exception)
         try:
-            query = check_query(query)
-            post = self.client.post_list(tags='rating:safe ' + query, page=random.randint(1, 1000), limit=5)
+            adapted_query = check_query(query)
+            post = self.client.post_list(tags='rating:safe ' + adapted_query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
@@ -79,15 +79,15 @@ class Danbooru:
                       Exception)
         try:
             check_nsfw(ctx)
-            query = check_query(query)
-            post = self.client.post_list(tags=query, page=random.randint(1, 1000), limit=5)
+            adapted_query = check_query(query)
+            post = self.client.post_list(tags=adapted_query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await print(e)
+            await ctx.send(e)
 
     @danbooru.command(aliases=['t'])
     @commands.cooldown(1, 5, commands.BucketType.member)

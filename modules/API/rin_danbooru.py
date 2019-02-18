@@ -42,7 +42,7 @@ def check_nsfw(ctx, query):
         pass
     elif ctx.channel.nsfw:
         pass
-    elif not ctx.channel.nsfw and not query:
+    elif not ctx.channel.nsfw and len(query) == 0:
         raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels')
     else:
         raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels')

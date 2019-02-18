@@ -19,6 +19,16 @@ def check_query(query):
     return new_query
 
 
+def check_query_nsfw(query):
+    new_query = query.lower().split()
+    if 'rating' in query:
+        raise custom_exceptions.NSFWException('Good try, pervy!')
+    if len(new_query) >= 3:
+        raise custom_exceptions.Error('Can\'t add three or more tags.')
+    new_query = ''.join(new_query)
+    return new_query
+
+
 def return_tags(list_tags):
     related_tags = [i['related_tags'] for i in list_tags]
     if not related_tags:
@@ -79,7 +89,7 @@ class Danbooru:
                       Exception)
         try:
             check_nsfw(ctx)
-            adapted_query = check_query(query)
+            adapted_query = check_query_nsfw(query)
             post = self.client.post_list(tags=adapted_query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(post))

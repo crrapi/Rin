@@ -37,11 +37,13 @@ def return_tags(list_tags):
     return tags
 
 
-def check_nsfw(ctx):
+def check_nsfw(ctx, query):
     if isinstance(ctx.channel, discord.DMChannel):
         pass
     elif ctx.channel.nsfw:
         pass
+    elif not ctx.channel.nsfw and not query:
+        raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels')
     else:
         raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels')
 
@@ -88,7 +90,7 @@ class Danbooru:
         exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
                       Exception)
         try:
-            check_nsfw(ctx)
+            check_nsfw(ctx, query)
             adapted_query = check_query_nsfw(query)
             post = self.client.post_list(tags=adapted_query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red())

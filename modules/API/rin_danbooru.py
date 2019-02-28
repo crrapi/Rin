@@ -48,7 +48,7 @@ def check_nsfw(ctx, query):
         raise custom_exceptions.NSFWException('NSFW commands only in NSFW channels')
 
 
-ef return_valid_image(post):
+def return_valid_image(post):
     if not post:
         raise custom_exceptions.ResourceNotFound('This tag doesn\'t exist')
     elif not ('file_url' in post[0] or not ('source' in post[0])):

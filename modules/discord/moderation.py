@@ -7,7 +7,7 @@ def check_amount(amount):
     if amount < 0 or amount > 500:
         raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
 
-class Moderation:
+class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

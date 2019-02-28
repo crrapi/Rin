@@ -44,7 +44,7 @@ def return_tags(search):
     return meta
 
 
-class ZeroChan:
+class ZeroChan(commands.Cog):
     """Commands for ZeroChan integration"""
 
     def __init__(self, bot):

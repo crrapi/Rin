@@ -1,5 +1,3 @@
-import sys
-
 import discord
 import humanize
 import psutil
@@ -20,7 +18,7 @@ def get_mem_usage():
     return humanize.naturalsize(mem)
 
 
-class Information:
+class Information(commands.Cog):
     """Commands for bot information"""
 
     def __init__(self, bot):

@@ -27,7 +27,7 @@ class Moderation(commands.Cog):
             await ctx.send(e)
 
     @purge.error
-    async def do_repeat_handler(self, ctx, error):
+    async def purge_error_handler(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send('You dont have Manage Messages permission to do that.')
         if isinstance(error, commands.BotMissingPermissions):

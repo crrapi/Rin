@@ -7,7 +7,7 @@ class ErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, error, ctx):
         if hasattr(ctx.command, 'on_error'):
             return
 

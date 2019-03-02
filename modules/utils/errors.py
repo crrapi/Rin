@@ -7,13 +7,17 @@ class ErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def on_command_error(self, error, ctx):
+    async def on_command_error(self, ctx, error):
         if hasattr(ctx.command, 'on_error'):
             return
 
         error = getattr(error, 'original', error)
+        silent_errors = (commands.CommandNotFound, commands.UserInputError)
 
-        if isinstance(error, commands.NotOwner):
+        if isinstance(error, silent_errors):
+            return
+        
+        elif isinstance(error, commands.NotOwner):
             return await ctx.message.add_reaction('\U0000274c')
 
         elif isinstance(error, commands.CommandOnCooldown):

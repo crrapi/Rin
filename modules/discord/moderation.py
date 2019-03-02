@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 
 
@@ -7,10 +8,12 @@ def check_amount(amount):
     if amount < 0 or amount > 500:
         raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
 
+
 def check_message(message):
-    if author:
-        return msg.author.id == target.id
+    if member:
+    	return message.author.id == member.id
     return True
+
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -25,17 +28,17 @@ class Moderation(commands.Cog):
         exceptions = (commands.UserInputError, commands.BadArgument)
         try:
             check_amount(amount)
-            deleted_msg = await ctx.channel.purge(limit=amount, check=msgcheck)
-            await ctx.send(f'Deleted {len(deleted)} messages.', delete_after=5)
+            deleted_msg = await ctx.channel.purge(limit=amount, check=check_message)
+            await ctx.send(f'Deleted {len(deleted_msg)} messages.', delete_after=5)
         except exceptions as e:
             await ctx.send(e)
 
     @purge.error
     async def purge_error_handler(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You dont have Manage Messages permission to do that.')
+            await ctx.send('You dont have permission to Manage Messages')
         if isinstance(error, commands.BotMissingPermissions):
-            await ctx.send('I dont have Manage Messages permission to do that.')
+            await ctx.send('I dont have permission to Manage Messages')
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

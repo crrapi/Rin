@@ -2,17 +2,9 @@ import discord
 from discord.ext import commands
 
 
-def check_amount(amount):
-    if amount is None:
-        raise commands.UserInputError('Input a amount of messages that you want to be deleted.')
+def check_amount(amount: int):
     if amount < 0 or amount > 500:
-        raise commands.BadArgument('Input a amount that is higher than 0 or less than 500.')
-
-
-def check_message(message):
-    if member:
-    	return message.author.id == member.id
-    return True
+        raise commands.errors.BadArgument('Input a value higher than 0 and less than 500.')
 
 
 class Moderation(commands.Cog):
@@ -23,22 +15,23 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def purge(self, ctx, amount: int = None, member: discord.Member = None):
+    async def purge(self, ctx, amount: int, member: discord.Member = None):
         """Delete messages by ammount"""
-        exceptions = (commands.UserInputError, commands.BadArgument)
+        exceptions = (commands.errors.BadArgument, Exception)
+
+        def is_member(message):
+            if member:
+                return message.author.id == member.id
+            return True
+
         try:
             check_amount(amount)
-            deleted_msg = await ctx.channel.purge(limit=amount, check=check_message)
-            await ctx.send(f'Deleted {len(deleted_msg)} messages.', delete_after=5)
+            await ctx.message.delete()
+            deleted_messages = await ctx.message.channel.purge(limit=amount, check=is_member)
+            await ctx.send(f'Deleted {len(deleted_messages)} messages.', delete_after=5)
         except exceptions as e:
-            await ctx.send(e)
+            await ctx.send(e, delete_after=5)
 
-    @purge.error
-    async def purge_error_handler(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You dont have permission to Manage Messages')
-        if isinstance(error, commands.BotMissingPermissions):
-            await ctx.send('I dont have permission to Manage Messages')
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

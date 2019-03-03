@@ -64,7 +64,7 @@ class ZeroChan(commands.Cog):
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e)
+            await ctx.send(e, delete_after=5)
 
     @zerochan.command(aliases=['img'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -79,7 +79,7 @@ class ZeroChan(commands.Cog):
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e)
+            await ctx.send(e, delete_after=5)
 
     @zerochan.command(aliases=['info'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -90,11 +90,10 @@ class ZeroChan(commands.Cog):
             info = await zerochan.info(query)
             info = return_info(info)
             await ctx.message.add_reaction('\U00002705')
-            await ctx.send('```fix\n' + info + '\n```')
-            await ctx.send(f'See more at: ```fix\nhttps://rin-zerochan.py.net/{query}\n```')
+            await ctx.send('```\n' + info + '\n```')
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e)
+            await ctx.send(e, delete_after=5)
 
     @zerochan.command(aliases=['m'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -109,7 +108,7 @@ class ZeroChan(commands.Cog):
             await pages.paginate()
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e)
+            await ctx.send(e, delete_after=5)
 
 
 def setup(bot):

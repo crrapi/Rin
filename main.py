@@ -1,5 +1,4 @@
 import json
-
 import discord
 from discord.ext import commands
 
@@ -13,8 +12,10 @@ async def get_prefix(_bot, message):
 
     return commands.when_mentioned_or(*prefixes)(_bot, message)
 
-extensions =['modules.API.rin_danbooru',
+
+extensions = ['modules.API.rin_danbooru',
               'modules.API.rin_zerochan',
+              'modules.API.rin_aur',
               'modules.discord.moderation',
               'modules.utils.errors',
               'modules.utils.information']
@@ -36,6 +37,7 @@ if __name__ == '__main__':
 async def on_ready():
     print(f'Hello World, I\'m {bot.user.name}!')
     await bot.change_presence(status=discord.Status.idle, activity=discord.Game('In development!'))
+
 
 bot.load_extension('jishaku')
 bot.run(config['token'])

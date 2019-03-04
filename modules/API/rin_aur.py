@@ -1,5 +1,4 @@
 import aiohttp
-import discord
 from discord.ext import commands
 from ..utils.paginator import Pages
 
@@ -10,7 +9,6 @@ class AUR(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['aurweb', 'rpc'])
-    @commands.is_owner()
     async def aur(self, ctx, *, query: str):
         """Search packages from AUR"""
         async with aiohttp.ClientSession() as session:

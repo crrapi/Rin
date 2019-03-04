@@ -70,7 +70,8 @@ class Information(commands.Cog):
         embed.add_field(name='Source', value='[GitHub](https://github.com/ArK7652/Rin)', inline=True)
         embed.add_field(name='Support', value='[Server](https://discord.gg/tdVZsDv)', inline=True)
         embed.add_field(name='Bot Invite',
-                        value='[Invite](https://discordapp.com/oauth2/authorize?client_id=545661874809864233&scope'
+                        value='[Invite](https://discordapp.com/oauth2/authorize?' +
+                              'client_id=545661874809864233&scope' +
                               '=bot&permissions=0)',
                         inline=True)
         await ctx.send(embed=embed)

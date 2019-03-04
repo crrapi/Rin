@@ -1,6 +1,5 @@
-import random
 import re
-
+import random
 import discord
 from discord.ext import commands
 from pybooru import Danbooru as Client
@@ -47,10 +46,8 @@ def check_nsfw(ctx):
 def return_valid_image(post):
     if not post:
         raise custom_exceptions.ResourceNotFound('This tag doesn\'t exist')
-    elif not ('file_url' in post[0] or not ('source' in post[0])):
-        return post[0]['source']
-    else:
-        return post[0]['file_url']
+    posts = [i['file_url'] for i in post]
+    return random.choice(posts)
 
 
 class Danbooru(commands.Cog):
@@ -68,7 +65,7 @@ class Danbooru(commands.Cog):
                       custom_exceptions.Error, Exception)
         try:
             adapted_query = check_query(query)
-            post = self.client.post_list(tags='rating:safe ' + adapted_query, page=random.randint(1, 1000), limit=5)
+            post = self.client.post_list(tags='rating:safe ' + adapted_query, pages=random.randint(0, 1000), limit=10)
             embed = discord.Embed(color=discord.Colour.red()).set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
@@ -85,7 +82,7 @@ class Danbooru(commands.Cog):
         try:
             check_nsfw(ctx)
             adapted_query = check_nsfw_query(query)
-            post = self.client.post_list(tags=adapted_query, page=random.randint(1, 1000), limit=5)
+            post = self.client.post_list(tags=adapted_query, pages=random.randint(0, 1000), limit=10)
             embed = discord.Embed(color=discord.Colour.red()).set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)

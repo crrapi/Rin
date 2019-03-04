@@ -15,6 +15,7 @@ async def get_prefix(_bot, message):
 
 extensions =['modules.API.rin_danbooru',
               'modules.API.rin_zerochan',
+              'modules.API.rin_aur',
               'modules.discord.moderation',
               'modules.utils.errors',
               'modules.utils.information']

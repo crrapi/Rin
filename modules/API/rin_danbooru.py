@@ -19,12 +19,10 @@ def check_query(query):
     return new_query
 
 
-def check_query_nsfw(query):
+def check_nsfw_query(query):
     new_query = query.lower().split()
-    if 'rating' in query:
-        raise custom_exceptions.NSFWException('Good try, pervy!')
-    if len(new_query) >= 3:
-        raise custom_exceptions.Error('Can\'t add three or more tags.')
+    if len(new_query) >= 2:
+        raise custom_exceptions.Error('Can\'t add two or more tags.')
     new_query = ''.join(new_query)
     return new_query
 
@@ -76,7 +74,7 @@ class Danbooru(commands.Cog):
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
     @danbooru.command(aliases=['n'])
     @commands.cooldown(1, 5, commands.BucketType.member)
@@ -86,14 +84,14 @@ class Danbooru(commands.Cog):
                       Exception)
         try:
             check_nsfw(ctx)
-            adapted_query = check_query_nsfw(query)
+            adapted_query = check_nsfw_query(query)
             post = self.client.post_list(tags=adapted_query, page=random.randint(1, 1000), limit=5)
             embed = discord.Embed(color=discord.Colour.red()).set_image(url=return_valid_image(post))
             await ctx.message.add_reaction('\U00002705')
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
     @danbooru.command(aliases=['t'])
     @commands.cooldown(1, 5, commands.BucketType.member)
@@ -108,7 +106,7 @@ class Danbooru(commands.Cog):
             await pages.paginate()
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
 
 def setup(bot):

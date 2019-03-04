@@ -79,7 +79,7 @@ class ZeroChan(commands.Cog):
             await ctx.send(embed=embed)
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
     @zerochan.command(aliases=['info'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -93,7 +93,7 @@ class ZeroChan(commands.Cog):
             await ctx.send('```\n' + info + '\n```')
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
     @zerochan.command(aliases=['m'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -108,7 +108,7 @@ class ZeroChan(commands.Cog):
             await pages.paginate()
         except exceptions as e:
             await ctx.message.add_reaction('\U0000274c')
-            await ctx.send(e, delete_after=5)
+            await ctx.send(e, delete_after=10)
 
 
 def setup(bot):

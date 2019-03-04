@@ -1,6 +1,7 @@
 import discord
 import humanize
 import psutil
+import sys
 from discord.ext import commands
 
 from .paginator import HelpPaginator

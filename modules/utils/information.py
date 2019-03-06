@@ -1,7 +1,8 @@
+import sys
+
 import discord
 import humanize
 import psutil
-import sys
 from discord.ext import commands
 
 from .paginator import HelpPaginator
@@ -38,7 +39,7 @@ class Information(commands.Cog):
                 specific = self.bot.get_cog(command) or self.bot.get_command(command)
 
                 if specific is None:
-                    await ctx.send('Command not found.')
+                    raise Exception('Command not found.')
                 elif isinstance(specific, commands.Command):
                     pages = await HelpPaginator.from_command(ctx, specific)
                 else:

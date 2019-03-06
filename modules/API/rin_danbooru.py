@@ -9,9 +9,10 @@ from ..utils.paginator import Pages
 
 
 def check_query(query):
-    new_query = query.lower().split()
-    if 'rating' in query:
+    new_query = query.lower()
+    if 'rating' in new_query:
         raise custom_exceptions.NSFWException('Good try, pervy!')
+    new_query = new_query.split()
     if len(new_query) >= 2:
         raise custom_exceptions.Error('Can\'t add two or more tags.')
     new_query = ''.join(new_query)
@@ -19,7 +20,7 @@ def check_query(query):
 
 
 def check_nsfw_query(query):
-    new_query = query.lower().split()
+    new_query = query.lower()
     if len(new_query) >= 2:
         raise custom_exceptions.Error('Can\'t add two or more tags.')
     new_query = ''.join(new_query)

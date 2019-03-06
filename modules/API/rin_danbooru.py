@@ -47,10 +47,9 @@ def check_nsfw(ctx):
 def return_valid_image(post):
     if not post:
         raise custom_exceptions.ResourceNotFound('This tag doesn\'t exist.')
-    file_url = post[0]['file_url']
-    if not file_url:
+    if 'file_url' not in post[0]:
         raise custom_exceptions.ResourceNotFound('Image not found.')
-    return file_url
+    return post[0]['file_url']
 
 
 class Danbooru(commands.Cog):
@@ -81,7 +80,7 @@ class Danbooru(commands.Cog):
     async def nsfw(self, ctx, *, query: str):
         """Return a random NSFW image from danbooru"""
         exceptions = (custom_exceptions.NSFWException, custom_exceptions.ResourceNotFound,
-                      Exception)
+                      custom_exceptions.Error, Exception)
         try:
             check_nsfw(ctx)
             adapted_query = check_nsfw_query(query)

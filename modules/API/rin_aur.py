@@ -7,10 +7,12 @@ from ..utils.paginator import Pages
 
 class AUR(commands.Cog):
     """Commands for Aurweb RPC Integration"""
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(aliases=['aurweb', 'rpc'])
+    @commands.cooldown(1, 5, commands.BucketType.guild)
     async def aur(self, ctx, *, query: str):
         """Search packages from AUR"""
         query = query.lower()

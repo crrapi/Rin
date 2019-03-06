@@ -20,7 +20,7 @@ def check_query(query):
 
 
 def check_nsfw_query(query):
-    new_query = query.lower()
+    new_query = query.lower().split()
     if len(new_query) >= 2:
         raise custom_exceptions.Error('Can\'t add two or more tags.')
     new_query = ''.join(new_query)

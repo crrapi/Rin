@@ -1,46 +1,41 @@
-import json
 import random
 
 import discord
 from discord.ext import commands
 from rin_zerochan import zerochan
 
-from ..utils.paginator import Pages
 from ..utils import custom_exceptions
-
-
-def return_search(search):
-    searches = json.dumps(search)
-    searches_json = json.loads(searches)
-    return searches_json
+from ..utils.paginator import Pages
 
 
 def return_valid_image(search):
-    images_list = return_search(search)
-    random_image = images_list[random.randint(0, 23)]['thumb']
-    if random_image:
-        return random_image
-    else:
+    images_list = search
+    random_image = random.choice(images_list)['thumb']
+    if not random_image:
         raise custom_exceptions.ResourceNotFound('Image not found.')
+    return random_image
 
 
 def return_unique_image(search):
-    image_list = return_search(search)
+    image_list = search
     image = image_list['url']
-    if image:
-        return image
-    else:
+    if not image:
         raise custom_exceptions.ResourceNotFound('Image not found.')
+    return image
 
 
 def return_info(info):
+    if not info:
+        raise custom_exceptions.ResourceNotFound('Info not found.')
     info = info[:1980] + '...' if len(info) >= 2000 else info
     return info
 
 
 def return_tags(search):
-    meta_list = return_search(search)
+    meta_list = search
     meta = [i['name'] for i in meta_list]
+    if not meta:
+        raise custom_exceptions.ResourceNotFound('Meta not found. ')
     return meta
 
 
@@ -57,7 +52,7 @@ class ZeroChan(commands.Cog):
         that matches you query."""
         exceptions = (custom_exceptions.ResourceNotFound, Exception)
         try:
-            search = await zerochan.search(query)
+            search = await zerochan.search(query, random.randint(1, 100))
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_image(url=return_valid_image(search))
             await ctx.message.add_reaction('\U00002705')
@@ -101,7 +96,7 @@ class ZeroChan(commands.Cog):
         """Retrieve tags from meta-tags."""
         exceptions = (custom_exceptions.ResourceNotFound, Exception)
         try:
-            search = await zerochan.meta(query)
+            search = await zerochan.meta(query, 1)
             meta = return_tags(search)
             pages = Pages(ctx, lines=tuple(meta))
             await ctx.message.add_reaction('\U00002705')

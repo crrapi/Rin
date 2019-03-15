@@ -64,7 +64,7 @@ class Information(commands.Cog):
                 '540345349576065065/' +
                 'c3dc0a076be76b5690ca69ddcd14c465.png')
         embed.add_field(name='Name', value='Rin', inline=True)
-        embed.add_field(name='Owner', value='reformed#5680', inline=True)
+        embed.add_field(name='Owner', value='ArK#7652', inline=True)
         embed.add_field(name='Python Version', value=f'{sys.version[:5]}', inline=True)
         embed.add_field(name='Library', value='discord.py [rewrite]', inline=True)
         embed.add_field(name='Prefix', value='rin', inline=True)
